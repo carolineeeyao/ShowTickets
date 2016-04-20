@@ -1,3 +1,5 @@
+package Assignment6;
+
 import java.util.ArrayList;
 
 public class RecitalHall {
