@@ -13,7 +13,7 @@ public class TestTicketOffice {
 
 	public static int score = 0;
 
-	//@Test
+	// @Test
 	public void basicServerTest() {
 		try {
 			TicketServer.start(16789);
@@ -24,62 +24,62 @@ public class TestTicketOffice {
 		client.requestTicket();
 	}
 
-	//@Test
+	// @Test
 	public void testServerCachedHardInstance() {
 		try {
 			TicketServer.start(16790);
 		} catch (Exception e) {
 			fail();
 		}
-		TicketClient client1 = new TicketClient("localhost", "c1");
-		TicketClient client2 = new TicketClient("localhost", "c2");
+		TicketClient client1 = new TicketClient("localhost", "c1", 16790);
+		TicketClient client2 = new TicketClient("localhost", "c2", 16790);
 		client1.requestTicket();
 		client2.requestTicket();
-		
+
 	}
 
-	//@Test
+	// @Test
 	public void threeNonConcurrentClientTest() {
 		try {
 			TicketServer.start(16791);
 		} catch (Exception e) {
 			fail();
 		}
-		TicketClient c1 = new TicketClient("nonconc1");
-		TicketClient c2 = new TicketClient("nonconc2");
-		TicketClient c3 = new TicketClient("nonconc3");
+		TicketClient c1 = new TicketClient("nonconc1", 16791);
+		TicketClient c2 = new TicketClient("nonconc2", 16791);
+		TicketClient c3 = new TicketClient("nonconc3", 16791);
 		c1.requestTicket();
 		c2.requestTicket();
 		c3.requestTicket();
 	}
 
-	@Test
+	// @Test
 	public void fourNonConcurrentClientTest() {
 		try {
 			TicketServer.start(16791);
 		} catch (Exception e) {
 			fail();
 		}
-		TicketClient c1 = new TicketClient("nonconc1");
-		TicketClient c2 = new TicketClient("nonconc2");
-		TicketClient c3 = new TicketClient("nonconc3");
-		TicketClient c4 = new TicketClient("nonconc4");
+		TicketClient c1 = new TicketClient("nonconc1", 16791);
+		TicketClient c2 = new TicketClient("nonconc2", 16791);
+		TicketClient c3 = new TicketClient("nonconc3", 16791);
+		TicketClient c4 = new TicketClient("nonconc4", 16791);
 		c1.requestTicket();
 		c2.requestTicket();
 		c3.requestTicket();
 		c4.requestTicket();
 	}
-	
-	//@Test
+
+	// @Test
 	public void threeConcurrentClientTest() {
 		try {
 			TicketServer.start(16792);
 		} catch (Exception e) {
 			fail();
 		}
-		final TicketClient c1 = new TicketClient("conc1");
-		final TicketClient c2 = new TicketClient("conc2");
-		final TicketClient c3 = new TicketClient("conc3");
+		final TicketClient c1 = new TicketClient("conc1", 16792);
+		final TicketClient c2 = new TicketClient("conc2", 16792);
+		final TicketClient c3 = new TicketClient("conc3", 16792);
 		Thread t1 = new Thread() {
 			public void run() {
 				c1.requestTicket();
@@ -107,5 +107,81 @@ public class TestTicketOffice {
 		}
 
 	}
+
+	// @Test
+	public void twoConcurrentServerTest() {
+		try {
+			TicketServer.start(12345);
+			TicketServer.start(17283);
+		} catch (Exception e) {
+			fail();
+		}
+		final TicketClient c1 = new TicketClient("conc1", 12345);
+		final TicketClient c2 = new TicketClient("conc2", 17283);
+		Thread t1 = new Thread() {
+			public void run() {
+				c1.requestTicket();
+			}
+		};
+		Thread t2 = new Thread() {
+			public void run() {
+				c2.requestTicket();
+			}
+		};
+		t1.start();
+		t2.start();
+		try {
+			t1.join();
+			t2.join();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
 	
+	@Test
+	public void twoConcurrentServersWithMultipleClientsTest() {
+		try {
+			TicketServer.start(12345);
+			TicketServer.start(17283);
+		} catch (Exception e) {
+			fail();
+		}
+		final TicketClient c1 = new TicketClient("conc1", 12345);
+		final TicketClient c2 = new TicketClient("conc2", 12345);
+		final TicketClient c3 = new TicketClient("conc3", 17283);
+		final TicketClient c4 = new TicketClient("conc4", 17283);
+		Thread t1 = new Thread() {
+			public void run() {
+				c1.requestTicket();
+			}
+		};
+		Thread t2 = new Thread() {
+			public void run() {
+				c2.requestTicket();
+			}
+		};
+		Thread t3 = new Thread() {
+			public void run() {
+				c3.requestTicket();
+			}
+		};
+		Thread t4 = new Thread() {
+			public void run() {
+				c4.requestTicket();
+			}
+		};
+		t1.start();
+		t2.start();
+		t3.start();
+		t4.start();
+		try {
+			t1.join();
+			t2.join();
+			t3.join();
+			t4.join();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

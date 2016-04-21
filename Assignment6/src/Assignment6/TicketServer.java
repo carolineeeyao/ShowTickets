@@ -20,7 +20,7 @@ public class TicketServer {
 
 	public static void start(int portNumber) throws IOException {
 		PORT = portNumber;
-		Runnable serverThread = new ThreadedTicketServer();
+		Runnable serverThread = new ThreadedTicketServer(portNumber);
 		Thread t = new Thread(serverThread);
 		t.start();
 	}
@@ -32,23 +32,24 @@ class ThreadedTicketServer implements Runnable {
 	String threadname = "X";
 	String testcase;
 	TicketClient sc;
-	RecitalHall theatre;
+	static RecitalHall theatre;
+	int port;
 	
-	public ThreadedTicketServer(){
+	public ThreadedTicketServer(int port){
 		theatre = new RecitalHall();
+		this.port = port;
 	}
 
 	public void run() {
-		// TODO 422C
 		ServerSocket serverSocket;
 		try {
-			serverSocket = new ServerSocket(TicketServer.PORT);
-			String requester;
+			serverSocket = new ServerSocket(port);
+			String requester;	//name of client
 			do{
-			Socket clientSocket = serverSocket.accept();
+			Socket clientSocket = serverSocket.accept();	//waits for a connection request from client
 			PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
 			BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-			requester = in.readLine();
+			requester = in.readLine();	//listen for request from client
 			if (requester != null){
 				String seat = theatre.getBestAvailableSeat();
 				theatre.printTicketSeat(seat, requester);
@@ -60,10 +61,9 @@ class ThreadedTicketServer implements Runnable {
 				}
 			}
 			clientSocket.close();
-			}while(requester != null);
+			}while(requester != null);	//close after clients are done requesting (seats sold out)
 			System.exit(0);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

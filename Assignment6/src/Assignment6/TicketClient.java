@@ -14,22 +14,25 @@ class ThreadedTicketClient implements Runnable {
 	String hostname = "127.0.0.1";
 	String threadname = "X";
 	TicketClient sc;
+	int port;
 
-	public ThreadedTicketClient(TicketClient sc, String hostname, String threadname) {
+	public ThreadedTicketClient(TicketClient sc, String hostname, String threadname, int port) {
 		this.sc = sc;
 		this.hostname = hostname;
 		this.threadname = threadname;
+		this.port = port;
 	}
 
 	public void run() {
 		System.out.flush();
+		//produces a number between 728 and 1000
 		for(int people = (int) (Math.random()*272) + 728; people > 0; people--) {
 			try {
-				Socket echoSocket = new Socket(hostname, TicketServer.PORT);
+				Socket echoSocket = new Socket(hostname, port);	//selects the server
 				PrintWriter out = new PrintWriter(echoSocket.getOutputStream(), true);
 				BufferedReader in = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
 				BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
-				out.println(threadname);
+				out.println(threadname); //sends request to server
 				if(in.readLine().equals("sold out")){
 					echoSocket.close();
 					break;
@@ -49,18 +52,18 @@ public class TicketClient {
 	String hostName = "";
 	String threadName = "";
 
-	TicketClient(String hostname, String threadname) {
-		tc = new ThreadedTicketClient(this, hostname, threadname);
+	TicketClient(String hostname, String threadname, int port) {
+		tc = new ThreadedTicketClient(this, hostname, threadname, port);
 		hostName = hostname;
 		threadName = threadname;
 	}
 
-	TicketClient(String name) {
-		this("localhost", name);
+	TicketClient(String name, int port) {
+		this("localhost", name, port);
 	}
 
 	TicketClient() {
-		this("localhost", "unnamed client");
+		this("localhost", "unnamed client", 00000);
 	}
 
 	void requestTicket() {

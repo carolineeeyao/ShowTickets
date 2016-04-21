@@ -19,6 +19,7 @@ public class RecitalHall {
 		createList();
 	}
 	
+	//creates list of seats in decreasing preference order
 	public void createList(){
 		while(seatRow <= 'Z'){
 			for(int i = 0; i <= 14; i++){
@@ -31,7 +32,8 @@ public class RecitalHall {
 		}
 	}
 	
-	public String getBestAvailableSeat(){
+	//returns the first seat in the list
+	public synchronized String getBestAvailableSeat(){
 		String out;
 		if(seats.size() != 0){
 			out = seats.get(0);
