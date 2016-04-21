@@ -1,3 +1,8 @@
+/* Name: Caroline Yao & Horng-Bin Justin Wei
+ * EID: Chy253 & Hjw396
+ * Section: Thursday 3:30-5:30pm, Friday 2-3:30pm
+ * EE 422C Assignment 6
+ */
 package Assignment6;
 
 import java.io.BufferedReader;
@@ -51,12 +56,12 @@ class ThreadedTicketServer implements Runnable {
 					out.println("sold out");
 				}
 				else{
-					out.println("hi");
+					out.println("we have seats");
 				}
 			}
 			clientSocket.close();
 			}while(requester != null);
-			
+			System.exit(0);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

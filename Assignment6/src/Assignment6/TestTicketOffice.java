@@ -1,3 +1,8 @@
+/* Name: Caroline Yao & Horng-Bin Justin Wei
+ * EID: Chy253 & Hjw396
+ * Section: Thursday 3:30-5:30pm, Friday 2-3:30pm
+ * EE 422C Assignment 6
+ */
 package Assignment6;
 
 import static org.junit.Assert.fail;
@@ -33,8 +38,8 @@ public class TestTicketOffice {
 		
 	}
 
-	@Test
-	public void twoNonConcurrentServerTest() {
+	//@Test
+	public void threeNonConcurrentClientTest() {
 		try {
 			TicketServer.start(16791);
 		} catch (Exception e) {
@@ -48,8 +53,25 @@ public class TestTicketOffice {
 		c3.requestTicket();
 	}
 
+	@Test
+	public void fourNonConcurrentClientTest() {
+		try {
+			TicketServer.start(16791);
+		} catch (Exception e) {
+			fail();
+		}
+		TicketClient c1 = new TicketClient("nonconc1");
+		TicketClient c2 = new TicketClient("nonconc2");
+		TicketClient c3 = new TicketClient("nonconc3");
+		TicketClient c4 = new TicketClient("nonconc4");
+		c1.requestTicket();
+		c2.requestTicket();
+		c3.requestTicket();
+		c4.requestTicket();
+	}
+	
 	//@Test
-	public void twoConcurrentServerTest() {
+	public void threeConcurrentClientTest() {
 		try {
 			TicketServer.start(16792);
 		} catch (Exception e) {
@@ -85,4 +107,5 @@ public class TestTicketOffice {
 		}
 
 	}
+	
 }

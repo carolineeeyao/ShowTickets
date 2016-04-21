@@ -1,3 +1,8 @@
+/* Name: Caroline Yao & Horng-Bin Justin Wei
+ * EID: Chy253 & Hjw396
+ * Section: Thursday 3:30-5:30pm, Friday 2-3:30pm
+ * EE 422C Assignment 6
+ */
 package Assignment6;
 
 import java.io.BufferedReader;
@@ -34,6 +39,7 @@ class ThreadedTicketClient implements Runnable {
 				e.printStackTrace();
 			}
 		}
+		
 	}
 }
 
@@ -57,11 +63,9 @@ public class TicketClient {
 		this("localhost", "unnamed client");
 	}
 
-	synchronized void requestTicket() { // only one can request a ticket at a
-										// time
+	void requestTicket() {
 		// TODO thread.run()
 		tc.run();
-		//System.out.println(hostName + "," + threadName + " got one ticket");
 	}
 
 	void sleep() {
