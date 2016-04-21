@@ -11,13 +11,14 @@ public class RecitalHall {
 	public RecitalHall(){
 		seatRow = 'A';
 		seats = new ArrayList<String>();
+		createList();
 	}
 	
 	public void createList(){
 		while(seatRow <= 'Z'){
 			for(int i = 0; i <= 14; i++){
 				seats.add(seatRow + "" + (SEAT_NUM + i));
-				if(i != 0 || i != 14){
+				if(i != 0 && i != 14){
 					seats.add(seatRow + "" + (SEAT_NUM - i));
 				}
 			}
@@ -35,6 +36,15 @@ public class RecitalHall {
 			// no more seats
 		}
 		return out;
+	}
+	
+	public void printTicketSeat(String seat, String requester){
+		if(seat.equals("empty")){
+			System.out.println("Sorry, we are sold out.");
+		}
+		else{
+			System.out.println(requester + ": Reserved seat " + seat);
+		}
 	}
 	
 	

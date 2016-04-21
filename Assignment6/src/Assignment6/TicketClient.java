@@ -18,15 +18,21 @@ class ThreadedTicketClient implements Runnable {
 
 	public void run() {
 		System.out.flush();
-		try {
-			Socket echoSocket = new Socket(hostname, TicketServer.PORT);
-			// PrintWriter out =
-			new PrintWriter(echoSocket.getOutputStream(), true);
-			BufferedReader in = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
-			BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
-			echoSocket.close();
-		} catch (Exception e) {
-			e.printStackTrace();
+		for(int people = (int) (Math.random()*272) + 728; people > 0; people--) {
+			try {
+				Socket echoSocket = new Socket(hostname, TicketServer.PORT);
+				PrintWriter out = new PrintWriter(echoSocket.getOutputStream(), true);
+				BufferedReader in = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
+				BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
+				out.println(threadname);
+				if(in.readLine().equals("sold out")){
+					echoSocket.close();
+					break;
+				}
+				echoSocket.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }
@@ -51,10 +57,11 @@ public class TicketClient {
 		this("localhost", "unnamed client");
 	}
 
-	void requestTicket() {
+	synchronized void requestTicket() { // only one can request a ticket at a
+										// time
 		// TODO thread.run()
 		tc.run();
-		System.out.println(hostName + "," + threadName + " got one ticket");
+		//System.out.println(hostName + "," + threadName + " got one ticket");
 	}
 
 	void sleep() {
